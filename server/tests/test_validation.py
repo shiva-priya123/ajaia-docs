@@ -1,3 +1,4 @@
+
 """Request validation: bad input gets a 4xx with a clear message, never a 500."""
 from __future__ import annotations
 
@@ -77,9 +78,9 @@ class TestShareValidation:
 
 class TestAuthValidation:
     def test_login_email_is_case_insensitive(self, client: TestClient, db: Session) -> None:
-        create_test_user(db, email="alice@example.com", password="password123")
+        create_test_user(db, email="shiva@example.com", password="password123")
         response = client.post(
-            "/api/auth/login", json={"email": "  Alice@Example.com ", "password": "password123"}
+            "/api/auth/login", json={"email": "  Shiva@Example.com ", "password": "password123"}
         )
         assert response.status_code == 200
 

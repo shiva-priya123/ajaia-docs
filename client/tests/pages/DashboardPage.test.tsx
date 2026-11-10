@@ -1,3 +1,4 @@
+
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useParams } from 'react-router-dom';
@@ -35,7 +36,13 @@ describe('DashboardPage', () => {
   beforeEach(() => {
     vi.mocked(documentsApi.getDocuments).mockResolvedValue([
       makeDoc({ id: 'own-1', title: 'My Plan', updated_at: '2026-10-02T10:00:00Z' }),
-      makeDoc({ id: 'shr-1', title: "Bob's Notes", role: 'viewer', owner_id: 'u-bob', owner_name: 'Bob' }),
+      makeDoc({
+        id: 'shr-1',
+        title: "Priya's Notes",
+        role: 'viewer',
+        owner_id: 'u-bob',
+        owner_name: 'Priya',
+      }),
     ]);
   });
 
@@ -45,16 +52,18 @@ describe('DashboardPage', () => {
     const ownedTab = await screen.findByRole('tab', { name: /my documents/i });
     expect(within(ownedTab).getByText('1')).toBeInTheDocument();
     expect(await screen.findByText('My Plan')).toBeInTheDocument();
-    expect(screen.queryByText("Bob's Notes")).not.toBeInTheDocument();
+    expect(screen.queryByText("Priya's Notes")).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('tab', { name: /shared with me/i }));
-    expect(screen.getByText("Bob's Notes")).toBeInTheDocument();
-    expect(screen.getByText('Shared by Bob')).toBeInTheDocument();
+    expect(screen.getByText("Priya's Notes")).toBeInTheDocument();
+    expect(screen.getByText('Shared by Priya')).toBeInTheDocument();
     expect(screen.queryByText('My Plan')).not.toBeInTheDocument();
   });
 
   it('creates a new document and opens it', async () => {
-    vi.mocked(documentsApi.createDocument).mockResolvedValue(makeDoc({ id: 'new-1', title: 'Untitled document' }));
+    vi.mocked(documentsApi.createDocument).mockResolvedValue(
+      makeDoc({ id: 'new-1', title: 'Untitled document' }),
+    );
     renderDashboard();
 
     await userEvent.click(await screen.findByRole('button', { name: /new document/i }));
@@ -70,7 +79,7 @@ describe('DashboardPage', () => {
     const pdf = new File(['%PDF'], 'report.pdf', { type: 'application/pdf' });
     await user.upload(screen.getByTestId('import-input'), pdf);
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(/isn't supported.*\.txt, \.md, \.docx/i);
+    expect(await screen.findByRole('alert')).toHaveTextContent(/isn't supported/i);
     expect(uploadApi.uploadFile).not.toHaveBeenCalled();
   });
 

@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import json
@@ -31,7 +32,13 @@ class TestCreateDocument:
         """A user can create a document with initial content."""
         user = create_test_user(db)
         headers = get_auth_headers(user)
-        content = json.dumps({"type": "doc", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "Hello"}]}]})
+        content = json.dumps({
+            "type": "doc",
+            "content": [{
+                "type": "paragraph",
+                "content": [{"type": "text", "text": "Hello"}],
+            }],
+        })
         response = client.post(
             "/api/documents",
             json={"title": "With Content", "content": content},
@@ -182,31 +189,43 @@ class TestListDocuments:
 
     def test_list_owned_and_shared(self, client: TestClient, db: Session) -> None:
         """Listing documents returns both owned and shared docs with correct roles."""
-        alice = create_test_user(db, email="alice@example.com", name="Alice")
-        bob = create_test_user(db, email="bob@example.com", name="Bob")
+        shiva = create_test_user(
+            db,
+            email="shiva@example.com",
+            name="Shiva",
+        )
+        priya = create_test_user(
+            db,
+            email="priya@example.com",
+            name="Priya",
+        )
 
-        # Alice creates a doc
-        doc1 = Document(title="Alice Doc", owner_id=alice.id, content="{}")
+        # Shiva creates a document.
+        doc1 = Document(title="Shiva Doc", owner_id=shiva.id, content="{}")
         db.add(doc1)
 
-        # Bob creates a doc
-        doc2 = Document(title="Bob Doc", owner_id=bob.id, content="{}")
+        # Priya creates a document.
+        doc2 = Document(title="Priya Doc", owner_id=priya.id, content="{}")
         db.add(doc2)
         db.commit()
         db.refresh(doc1)
         db.refresh(doc2)
 
-        # Share Bob's doc with Alice as viewer
-        share = Share(document_id=doc2.id, user_id=alice.id, permission="viewer")
+        # Share Priya's document with Shiva as viewer.
+        share = Share(
+            document_id=doc2.id,
+            user_id=shiva.id,
+            permission="viewer",
+        )
         db.add(share)
         db.commit()
 
-        headers = get_auth_headers(alice)
+        headers = get_auth_headers(shiva)
         response = client.get("/api/documents", headers=headers)
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 2
 
         titles = {d["title"]: d["role"] for d in data}
-        assert titles["Alice Doc"] == "owner"
-        assert titles["Bob Doc"] == "viewer"
+        assert titles["Shiva Doc"] == "owner"
+        assert titles["Priya Doc"] == "viewer"

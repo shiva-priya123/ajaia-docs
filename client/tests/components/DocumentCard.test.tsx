@@ -1,3 +1,4 @@
+
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
@@ -5,7 +6,12 @@ import { describe, expect, it, vi } from 'vitest';
 import DocumentCard from '../../src/components/dashboard/DocumentCard';
 import { makeDoc } from '../fixtures';
 
-const renderCard = (ui: React.ReactElement) => render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{ui}</MemoryRouter>);
+const renderCard = (ui: React.ReactElement) =>
+  render(
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      {ui}
+    </MemoryRouter>,
+  );
 
 describe('DocumentCard', () => {
   it('shows an owned document with a preview and a delete action', () => {
@@ -20,10 +26,13 @@ describe('DocumentCard', () => {
 
   it('distinguishes a document shared with view-only access', () => {
     renderCard(
-      <DocumentCard document={makeDoc({ role: 'viewer', owner_name: 'Bob', owner_id: 'u-bob' })} onDelete={vi.fn()} />,
+      <DocumentCard
+        document={makeDoc({ role: 'viewer', owner_name: 'Priya', owner_id: 'u-bob' })}
+        onDelete={vi.fn()}
+      />,
     );
 
-    expect(screen.getByText('Shared by Bob')).toBeInTheDocument();
+    expect(screen.getByText('Shared by Priya')).toBeInTheDocument();
     expect(screen.getByText('View only')).toBeInTheDocument();
     expect(screen.queryByText('Owned by you')).not.toBeInTheDocument();
     // Only owners can delete.
@@ -31,7 +40,7 @@ describe('DocumentCard', () => {
   });
 
   it('labels shared documents the user can edit', () => {
-    renderCard(<DocumentCard document={makeDoc({ role: 'editor', owner_name: 'Bob' })} />);
+    renderCard(<DocumentCard document={makeDoc({ role: 'editor', owner_name: 'Priya' })} />);
     expect(screen.getByText('Can edit')).toBeInTheDocument();
   });
 

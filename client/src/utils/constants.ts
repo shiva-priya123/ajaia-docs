@@ -1,3 +1,4 @@
+
 export const APP_NAME = 'Ajaia Docs';
 export const TOKEN_KEY = 'ajaia_token';
 export const AUTO_SAVE_DELAY_MS = 1500;
@@ -9,8 +10,9 @@ export const IMPORT_EXTENSIONS = ['.txt', '.md', '.docx'] as const;
 export const IMPORT_MAX_BYTES = 5 * 1024 * 1024;
 
 export const DEMO_PASSWORD = 'password123';
+
 export const DEMO_ACCOUNTS = [
-  { name: 'Alice', email: 'alice@example.com' },
-  { name: 'Bob', email: 'bob@example.com' },
-  { name: 'Charlie', email: 'charlie@example.com' },
+  { name: 'Shiva', email: 'shiva@example.com' },
+  { name: 'Priya', email: 'priya@example.com' },
+  { name: 'Sai', email: 'sai@example.com' },
 ] as const;

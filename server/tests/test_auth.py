@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 from fastapi.testclient import TestClient
@@ -11,24 +12,24 @@ class TestLogin:
 
     def test_login_success(self, client: TestClient, db: Session) -> None:
         """A valid email/password pair returns a token and user info."""
-        user = create_test_user(db, email="alice@example.com", name="Alice")
+        user = create_test_user(db, email="shiva@example.com", name="Shiva")
         response = client.post(
             "/api/auth/login",
-            json={"email": "alice@example.com", "password": "password123"},
+            json={"email": "shiva@example.com", "password": "password123"},
         )
         assert response.status_code == 200
         data = response.json()
         assert "token" in data
-        assert data["user"]["email"] == "alice@example.com"
-        assert data["user"]["name"] == "Alice"
+        assert data["user"]["email"] == "shiva@example.com"
+        assert data["user"]["name"] == "Shiva"
         assert data["user"]["id"] == user.id
 
     def test_login_wrong_password(self, client: TestClient, db: Session) -> None:
         """An incorrect password returns 401."""
-        create_test_user(db, email="alice@example.com")
+        create_test_user(db, email="shiva@example.com")
         response = client.post(
             "/api/auth/login",
-            json={"email": "alice@example.com", "password": "wrongpassword"},
+            json={"email": "shiva@example.com", "password": "wrongpassword"},
         )
         assert response.status_code == 401
 
@@ -46,13 +47,13 @@ class TestGetMe:
 
     def test_get_me_authenticated(self, client: TestClient, db: Session) -> None:
         """An authenticated user can retrieve their own profile."""
-        user = create_test_user(db, name="Alice", email="alice@example.com")
+        user = create_test_user(db, name="Shiva", email="shiva@example.com")
         headers = get_auth_headers(user)
         response = client.get("/api/auth/me", headers=headers)
         assert response.status_code == 200
         data = response.json()
-        assert data["email"] == "alice@example.com"
-        assert data["name"] == "Alice"
+        assert data["email"] == "shiva@example.com"
+        assert data["name"] == "Shiva"
 
     def test_get_me_unauthenticated(self, client: TestClient) -> None:
         """A request without a token returns 401."""
