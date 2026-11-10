@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: Georgia, Cambria, "Times New Roman", serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+/* ── Rich-text content (TipTap / ProseMirror) ─────────────────────────────── */
+.doc-content .ProseMirror {
+  @apply min-h-[60vh] text-[15px] leading-7 text-slate-800 outline-none;
+}
+.doc-content .ProseMirror > * + * {
+  @apply mt-3;
+}
+.doc-content .ProseMirror h1 {
+  @apply mt-6 text-3xl font-semibold leading-tight tracking-tight text-slate-900;
+}
+.doc-content .ProseMirror h2 {
+  @apply mt-6 text-2xl font-semibold leading-snug text-slate-900;
+}
+.doc-content .ProseMirror h3 {
+  @apply mt-5 text-xl font-semibold text-slate-900;
+}
+.doc-content .ProseMirror :is(h4, h5, h6) {
+  @apply mt-4 text-base font-semibold text-slate-900;
+}
+.doc-content .ProseMirror > :first-child {
+  @apply mt-0;
+}
+.doc-content .ProseMirror ul {
+  @apply list-disc pl-6;
+}
+.doc-content .ProseMirror ol {
+  @apply list-decimal pl-6;
+}
+.doc-content .ProseMirror li > p {
+  @apply my-0.5;
+}
+.doc-content .ProseMirror blockquote {
+  @apply border-l-4 border-slate-300 pl-4 text-slate-600 italic;
+}
+.doc-content .ProseMirror code {
+  @apply rounded bg-slate-100 px-1 py-0.5 font-mono text-[0.9em] text-rose-700;
+}
+.doc-content .ProseMirror pre {
+  @apply overflow-x-auto rounded-md bg-slate-900 p-4 font-mono text-sm leading-6 text-slate-100;
+}
+.doc-content .ProseMirror pre code {
+  @apply bg-transparent p-0 text-inherit;
+}
+.doc-content .ProseMirror hr {
+  @apply my-6 border-slate-200;
+}
+.doc-content .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply pointer-events-none float-left h-0 text-slate-400;
+}

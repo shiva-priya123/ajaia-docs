@@ -1,0 +1,18 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# New → Blueprint → pick this repo. Render builds the Dockerfile and runs one
+# web service that serves both the API (/api/*) and the React app.
+services:
+  - type: web
+    name: ajaia-docs
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true   # random secret, generated once by Render
+      # Free instances have an ephemeral filesystem: the SQLite file resets on
+      # each deploy/restart and the demo data is re-seeded automatically.
+      # For durable data, upgrade the plan, add a disk mounted at /app/data,
+      # and keep DATABASE_URL pointing there (set in the Dockerfile).
